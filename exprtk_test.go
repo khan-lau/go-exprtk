@@ -7,9 +7,12 @@ import (
 	"testing"
 )
 
+func Test_info(t *testing.T) {
+	fmt.Println(Version())
+}
+
 func TestNewExprtk(t *testing.T) {
 	exprtkObj := NewExprtk()
-	defer exprtkObj.Delete()
 
 	if reflect.TypeOf(exprtkObj).String() != "exprtk.GoExprtk" {
 		t.Error("NewExprtk returned incorrect type")
@@ -18,12 +21,11 @@ func TestNewExprtk(t *testing.T) {
 
 func TestCompileExpression(t *testing.T) {
 	exprtkObj := NewExprtk()
-	defer exprtkObj.Delete()
 
 	exprtkObj.SetExpression("x.1 + y.1")
 
-	exprtkObj.AddDoubleVariable("x.1")
-	exprtkObj.AddDoubleVariable("y.1")
+	exprtkObj.AddDoubleVariable("x.1", 0)
+	exprtkObj.AddDoubleVariable("y.1", 0)
 
 	err := exprtkObj.CompileExpression()
 	if err.Error() != "failed to compile the expression" {
@@ -32,8 +34,8 @@ func TestCompileExpression(t *testing.T) {
 
 	exprtkObj.SetExpression("x + y")
 
-	exprtkObj.AddDoubleVariable("x")
-	exprtkObj.AddDoubleVariable("y")
+	exprtkObj.AddDoubleVariable("x", 0)
+	exprtkObj.AddDoubleVariable("y", 0)
 
 	err = exprtkObj.CompileExpression()
 	if err != nil {
@@ -43,12 +45,11 @@ func TestCompileExpression(t *testing.T) {
 
 func TestDoubleVariables(t *testing.T) {
 	exprtkObj := NewExprtk()
-	defer exprtkObj.Delete()
 
 	exprtkObj.SetExpression("(x + 2)*(y-2)")
 
-	exprtkObj.AddDoubleVariable("x")
-	exprtkObj.AddDoubleVariable("y")
+	exprtkObj.AddDoubleVariable("x", 0)
+	exprtkObj.AddDoubleVariable("y", 0)
 
 	err := exprtkObj.CompileExpression()
 	if err != nil {
@@ -56,13 +57,12 @@ func TestDoubleVariables(t *testing.T) {
 		return
 	}
 
-	exprtkObj.SetDoubleVariableValue("x", 18)
-	exprtkObj.SetDoubleVariableValue("y", 32)
+	exprtkObj.UpdateDoubleVariableValue("x", 18)
+	exprtkObj.UpdateDoubleVariableValue("y", 32)
 
 	if exprtkObj.GetEvaluatedValue() != 600 {
 		t.Error("Incorrect Value")
 	}
-
 }
 
 func TestMixedVariables(t *testing.T) {
@@ -77,40 +77,39 @@ func TestMixedVariables(t *testing.T) {
 	var array []float64 = []float64{1, 2, 3, -4.3, 10, -6.5, 7, 8, -1.3}
 
 	exprtkObj := NewExprtk()
-	defer exprtkObj.Delete()
 
 	exprtkObj.SetExpression(eqn)
-	exprtkObj.AddStringVariable("eqn")
-	exprtkObj.AddVectorVariable("x")
+	exprtkObj.AddStringVariable("eqn", "min")
+	exprtkObj.AddVectorVariable("x", []float64{1, 4, 5.3, 4.3, 10, 6.5, 7, 8, 1.3})
 	exprtkObj.CompileExpression()
-	exprtkObj.SetVectorVariableValue("x", array)
+	exprtkObj.UpdateVectorVariableValue("x", array)
 
 	eqnStr = "avg"
-	exprtkObj.SetStringVariableValue("eqn", eqnStr)
+	exprtkObj.UpdateStringVariableValue("eqn", eqnStr)
 	if math.Round(exprtkObj.GetEvaluatedValue()*10)/10 != 2.1 {
 		t.Error("Incorrect Value")
 	}
 
 	eqnStr = "max"
-	exprtkObj.SetStringVariableValue("eqn", eqnStr)
+	exprtkObj.UpdateStringVariableValue("eqn", eqnStr)
 	if exprtkObj.GetEvaluatedValue() != 10 {
 		t.Error("Incorrect Value")
 	}
 
 	eqnStr = "min"
-	exprtkObj.SetStringVariableValue("eqn", eqnStr)
+	exprtkObj.UpdateStringVariableValue("eqn", eqnStr)
 	if exprtkObj.GetEvaluatedValue() != -6.5 {
 		t.Error("Incorrect Value")
 	}
 
 	eqnStr = "sum"
-	exprtkObj.SetStringVariableValue("eqn", eqnStr)
+	exprtkObj.UpdateStringVariableValue("eqn", eqnStr)
 	if exprtkObj.GetEvaluatedValue() != 18.9 {
 		t.Error("Incorrect Value")
 	}
 
 	eqnStr = "xyz"
-	exprtkObj.SetStringVariableValue("eqn", eqnStr)
+	exprtkObj.UpdateStringVariableValue("eqn", eqnStr)
 	if exprtkObj.GetEvaluatedValue() != 0.0 {
 		t.Error("Incorrect Value")
 	}

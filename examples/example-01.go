@@ -3,20 +3,19 @@ package main
 import (
 	"fmt"
 
-	"github.com/Pramod-Devireddy/go-exprtk"
+	"github.com/khan-lau/go-exprtk"
 )
 
 func example01() {
 	// Create a new exprtk instance
 	exprtkObj := exprtk.NewExprtk()
-	defer exprtkObj.Delete()
 
 	// Set the expression
 	exprtkObj.SetExpression("(x + 2)*(y-2)")
 
 	// Add variables of expression
-	exprtkObj.AddDoubleVariable("x")
-	exprtkObj.AddDoubleVariable("y")
+	exprtkObj.AddDoubleVariable("x", 1)
+	exprtkObj.AddDoubleVariable("y", 2)
 
 	// Compile the expression after expression and variables declaration
 	err := exprtkObj.CompileExpression()
@@ -26,14 +25,14 @@ func example01() {
 	}
 
 	// Set values for the variables
-	exprtkObj.SetDoubleVariableValue("x", 18)
-	exprtkObj.SetDoubleVariableValue("y", 32)
+	exprtkObj.UpdateDoubleVariableValue("x", 18)
+	exprtkObj.UpdateDoubleVariableValue("y", 32)
 
 	// Get the evaluated value
 	fmt.Println(exprtkObj.GetEvaluatedValue())
 
 	// Modify values for the variables
-	exprtkObj.SetDoubleVariableValue("y", 42)
+	exprtkObj.UpdateDoubleVariableValue("y", 42)
 
 	// Get re-evaluated value
 	fmt.Println(exprtkObj.GetEvaluatedValue())

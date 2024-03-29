@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/Pramod-Devireddy/go-exprtk"
+	"github.com/khan-lau/go-exprtk"
 )
 
 func example02() {
@@ -19,31 +19,30 @@ func example02() {
 	var array []float64 = []float64{1, 2, 3, -4.3, 10, -6.5, 7, 8, -1.3}
 
 	exprtkObj := exprtk.NewExprtk()
-	defer exprtkObj.Delete()
 
 	exprtkObj.SetExpression(eqn)
-	exprtkObj.AddStringVariable("eqn")
-	exprtkObj.AddVectorVariable("x")
+	exprtkObj.AddStringVariable("eqn", "max")
+	exprtkObj.AddVectorVariable("x", []float64{1, 5, 2, 4.2, 10, 6.5, 7, 8, 1.3})
 	exprtkObj.CompileExpression()
-	exprtkObj.SetVectorVariableValue("x", array)
+	exprtkObj.UpdateVectorVariableValue("x", array)
 
 	eqnStr = "avg"
-	exprtkObj.SetStringVariableValue("eqn", eqnStr)
+	exprtkObj.UpdateStringVariableValue("eqn", eqnStr)
 	fmt.Println(math.Round(exprtkObj.GetEvaluatedValue()*100) / 100)
 
 	eqnStr = "max"
-	exprtkObj.SetStringVariableValue("eqn", eqnStr)
+	exprtkObj.UpdateStringVariableValue("eqn", eqnStr)
 	fmt.Println(exprtkObj.GetEvaluatedValue())
 
 	eqnStr = "min"
-	exprtkObj.SetStringVariableValue("eqn", eqnStr)
+	exprtkObj.UpdateStringVariableValue("eqn", eqnStr)
 	fmt.Println(exprtkObj.GetEvaluatedValue())
 
 	eqnStr = "sum"
-	exprtkObj.SetStringVariableValue("eqn", eqnStr)
+	exprtkObj.UpdateStringVariableValue("eqn", eqnStr)
 	fmt.Println(exprtkObj.GetEvaluatedValue())
 
 	eqnStr = "xyz"
-	exprtkObj.SetStringVariableValue("eqn", eqnStr)
+	exprtkObj.UpdateStringVariableValue("eqn", eqnStr)
 	fmt.Println(exprtkObj.GetEvaluatedValue())
 }

@@ -28,7 +28,7 @@ Go-ExprTk supports numerous forms of functional, logical and vector processing s
 ## Installation
 
 ```bash
-go get github.com/Pramod-Devireddy/go-exprtk
+go get github.com/khan-lau/go-exprtk
 ```
 
 ## Examples
@@ -38,16 +38,12 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/Pramod-Devireddy/go-exprtk"
+	"github.com/khan-lau/go-exprtk"
 )
 
 func main() {
 	exprtkObj := exprtk.NewExprtk()
-	defer exprtkObj.Delete()
-
 	exprtkObj.SetExpression("(x + 2)*(y-2)")
-
 	exprtkObj.AddDoubleVariable("x")
 	exprtkObj.AddDoubleVariable("y")
 
@@ -56,7 +52,7 @@ func main() {
 		fmt.Println(err.Error())
 		return
 	}
-
+	
 	exprtkObj.SetDoubleVariableValue("x", 18)
 	exprtkObj.SetDoubleVariableValue("y", 32)
 
@@ -64,7 +60,32 @@ func main() {
 }
 ```
 
-Check out more [Examples](https://github.com/Pramod-Devireddy/go-exprtk/tree/main/examples) 
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/khan-lau/go-exprtk"
+)
+
+func main() {
+	exprtkObj := exprtk.NewExprtk()
+	exprtkObj.SetExpression("sum(x)")
+	exprtkObj.AddVectorVariable("x", []float64{1, 5, 2, 4.2, 10, 6.5, 7, 8, 1.3})
+
+	err := exprtkObj.CompileExpression()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	exprtkObj.UpdateVectorVariable("x",  []float64{1.5, 5, 2.1, 4.2, 10, 6.5, 7, 8, 1.3})
+	fmt.Println(exprtkObj.GetEvaluatedValue())
+}
+```
+
+Check out more [Examples](https://github.com/khan-lau/go-exprtk/tree/main/examples) 
 
 
 ## ⚡ Features
